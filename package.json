@@ -1,0 +1,43 @@
+{
+  "name": "vex",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "16.11.19",
+    "prisma": "3.7.0",
+    "tailwindcss": "^3.0.23",
+    "ts-node": "10.4.0",
+    "typescript": "4.5.4"
+  },
+  "scripts": {
+    "dev": "npx tailwindcss -i ./public/stylesheets/source.css -o ./public/stylesheets/dist/style.css && ts-node ./script.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "3.7.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.2"
+  },
+  "engines": {
+    "node": ">=12.2.0"
+  },
+  "description": "Vex makes it easy to quickly setup an expressjs app with authentication and a database.",
+  "version": "1.0.0",
+  "main": "script.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wqrld/Vex.git"
+  },
+  "keywords": [
+    "expressjs",
+    "exress",
+    "html",
+    "handlebars",
+    "web"
+  ],
+  "author": "Wqrld",
+  "bugs": {
+    "url": "https://github.com/Wqrld/Vex/issues"
+  },
+  "homepage": "https://github.com/Wqrld/Vex#readme"
+}

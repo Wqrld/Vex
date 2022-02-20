@@ -1,0 +1,5 @@
+.env
+prisma/dev.db
+node_modules/
+.vscode/
+public/stylesheets/dist/
