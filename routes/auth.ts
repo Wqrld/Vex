@@ -57,7 +57,7 @@ module.exports = function (app: Application, prisma: PrismaClient) {
 
     // Login Logic
     app.post('/login', authLimit, async function (req: Request, res: Response) {
-        const { email, password } = req.body;
+        const { email, password }: { email: string, password: string } = req.body;
         if (!validateInput(password)) {
             res.render('auth/login', {
                 error: "Invalid input"
@@ -111,7 +111,7 @@ module.exports = function (app: Application, prisma: PrismaClient) {
 
     // Registration logic
     app.post('/register', authLimit, async function (req: Request, res: Response) {
-        const { name, email, password, password2 } = req.body;
+        const { name, email, password, password2 }: { name: string, email: string, password: string, password2: string } = req.body;
         if (!validateInput(password) || !validateInput(password2)) {
             res.render('auth/register', {
                 error: "Invalid input"
