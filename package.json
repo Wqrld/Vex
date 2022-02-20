@@ -12,7 +12,8 @@
   },
   "scripts": {
     "dev": "npx tailwindcss -i ./public/stylesheets/source.css -o ./public/stylesheets/dist/style.css && ts-node ./index.ts",
-    "generate": "npx prisma generate"
+    "generate": "npx prisma generate",
+    "migrate": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "3.7.0",

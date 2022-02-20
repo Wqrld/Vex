@@ -15,9 +15,13 @@ Then, copy the .env.example to .env and fill in the details.
 
 Lastly, generate the database:
 
-`npm run generate`
+`npm run migrate`
 
 ## Running
 The dev script compiles the css and TS and runs the webserver:
 
 `npm run dev`
+
+## Regenerating the prisma types
+
+Run `npm run generate` to generate typescript defintions from the prisma schema.
