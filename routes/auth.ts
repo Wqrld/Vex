@@ -7,6 +7,7 @@ const csurf = require('csurf');
 const csrf = csurf({ cookie: false })
 const crypto = require("crypto");
 
+// Rate Limiter for the auth endpoints
 const authLimit = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 minutes
     max: 6, // start blocking after 5 requests
@@ -14,6 +15,7 @@ const authLimit = rateLimit({
         "Too many auth requests, try again in 10 minutes"
 });
 
+// Fix to allow express session to work with TS
 declare module 'express-session' {
     interface SessionData {
         user: User;
@@ -81,6 +83,7 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             });
             return;
         }
+        // Generate a hash from the password to compare with the hash in the database
         crypto.pbkdf2(user.password, user.salt + process.env.PASSWORD_PEPPER, 100000, 64, 'sha512', function (err: string, derivedKey: Buffer) {
 
             if (user.password !== derivedKey.toString('hex')) {
@@ -139,6 +142,8 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             });
             return;
         }
+
+        // Generate a random salt and hash the password
         const salt = crypto.randomBytes(16).toString('hex');
         crypto.pbkdf2(password, salt + process.env.PASSWORD_PEPPER, 100000, 64, 'sha512', async function (err: string, derivedKey: Buffer) {
             if(err){

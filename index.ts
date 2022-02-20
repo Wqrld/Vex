@@ -27,7 +27,7 @@ app.use(express.static('public'));
 const prisma = new PrismaClient();
 
 // A example that uses the prisma client to retrieve data
-app.get("/", async (req: Request, res: Response, next: NextFunction) => {
+app.get("/", async (req: Request, res: Response) => {
 
   const allUsers = await prisma.user.findMany({
     include: { posts: true },
