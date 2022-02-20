@@ -11,7 +11,9 @@ Just run npm install:
 
 `npm install`
 
-And then generate the database:
+Then, copy the .env.example to .env and fill in the details.
+
+Lastly, generate the database:
 
 `npm run generate`
 
