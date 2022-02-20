@@ -1,5 +1,6 @@
 .env
 prisma/dev.db
+prisma/*.db-journal
 node_modules/
 .vscode/
 public/stylesheets/dist/
