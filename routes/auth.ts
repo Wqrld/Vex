@@ -78,7 +78,7 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             return;
         }
         // Generate a hash from the password to compare with the hash in the database
-        crypto.pbkdf2(user.password, user.salt + process.env.PASSWORD_PEPPER, 100000, 64, 'sha512', function (err: string, derivedKey: Buffer) {
+        crypto.pbkdf2(password, user.salt + process.env.PASSWORD_PEPPER, 100000, 64, 'sha512', function (err: string, derivedKey: Buffer) {
 
             if (user.password !== derivedKey.toString('hex')) {
                 res.render('auth/login', {
