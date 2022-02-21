@@ -45,7 +45,6 @@ module.exports = function (app: Application, prisma: PrismaClient) {
         resave: false,
         saveUninitialized: false,
         cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 7,
             secure: false,
             httpOnly: true
         }
@@ -192,7 +191,7 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             },
             data: {
                 resetToken: token,
-                resetTokenExpiry: Date.now() + 3600000
+                resetTokenExpiry: Date.now() + 3600000 // 1 hour
             }
         });
         const transporter = nodemailer.createTransport({
@@ -212,7 +211,8 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             Please click on the following link, or paste this into your browser to complete the process:\n\n
             ${process.env.URL}/reset/${token}\n\n
 
-            If you did not request this, please ignore this email and your password will remain unchanged.\n`
+            If you did not request this, please ignore this email and your password will remain unchanged.\n\n
+            This password reset token is valid for 1 hour.`
         };
         transporter.sendMail(mailOptions, function (err: string, info: any) {
             if (err) {
