@@ -198,7 +198,7 @@ module.exports = function (app: Application, prisma: PrismaClient) {
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: process.env.SMTP_PORT,
-            secure: process.env.SMTP_SECURE, // true for 465, false for other ports
+            secure: process.env.SMTP_SECURE == 'true' ? true : false, // true for 465, false for other ports
             auth: {
               user: process.env.SMTP_USER,
               pass: process.env.SMTP_PASSWORD, 
@@ -210,12 +210,13 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             subject: 'Password reset',
             text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
             Please click on the following link, or paste this into your browser to complete the process:\n\n
-            https://${process.env.URL}/reset/${token}\n\n
+            ${process.env.URL}/reset/${token}\n\n
 
             If you did not request this, please ignore this email and your password will remain unchanged.\n`
         };
         transporter.sendMail(mailOptions, function (err: string, info: any) {
             if (err) {
+                console.log(err)
                 res.render('auth/forgot', {
                     error: "An error occured"
                 });
