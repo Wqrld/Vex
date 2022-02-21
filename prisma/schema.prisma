@@ -23,4 +23,6 @@ model User {
   posts    Post[]
   password String
   salt     String
+  resetTokenExpiry Int?
+  resetToken String?
 }
