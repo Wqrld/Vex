@@ -184,6 +184,8 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             });
             return;
         }
+
+        // Createa a new password reset token that is valid for 1 hour
         const token = crypto.randomBytes(16).toString('hex');
         await prisma.user.update({
             where: {
@@ -258,6 +260,8 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             });
             return;
         }
+
+        // Generate a new password hash for the user and store it in the database
         crypto.pbkdf2(password, user.salt + process.env.PASSWORD_PEPPER, 100000, 64, 'sha512', async function (err: string, derivedKey: Buffer) {
             if(err){
                 res.render('auth/reset', {
