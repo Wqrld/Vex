@@ -40,16 +40,12 @@ if (process.env.AUTH_ENABLED === 'true') {
 // A example that uses the prisma client to retrieve data
 app.get("/", async (req: Request, res: Response) => {
 
-  const allUsers = await prisma.user.findMany({
-    include: { posts: true },
-  });
-
   if (req.session) {
-    res.render('home', { allUsers, currentUser: req.session.user, auth: process.env.AUTH_ENABLED == 'true' });
+    res.render('home', {currentUser: req.session.user, auth: process.env.AUTH_ENABLED == 'true', isAdmin: req.session?.user?.role == 'admin'});
   } else {
-    res.render('home', { allUsers, currentUser: null, auth: process.env.AUTH_ENABLED == 'true' });
+    res.render('home', {currentUser: null, auth: process.env.AUTH_ENABLED == 'true',isAdmin: false });
   }
-  console.log(allUsers);
+
 
 });
 

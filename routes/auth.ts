@@ -1,6 +1,6 @@
 
 import { PrismaClient, User } from '@prisma/client'
-import { Application, Response, Request } from "express";
+import { Application, Response, Request, NextFunction } from "express";
 const rateLimit = require("express-rate-limit");
 const session = require('express-session');
 const nodemailer = require('nodemailer');
@@ -36,7 +36,21 @@ function validateEmail(email: string): boolean {
     return re.test(String(email).toLowerCase());
 }
 
+function requiresAdmin(req: Request, res: Response, next: NextFunction) {
+    if (req.session && req.session.user && req.session.user.role == "admin") {
+        next();
+    } else {
+        res.redirect('/');
+    }
+}
 
+function requiresLoggedIn(req: Request, res: Response, next: NextFunction) {
+    if (req.session && req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
 
 module.exports = function (app: Application, prisma: PrismaClient) {
 
@@ -50,9 +64,30 @@ module.exports = function (app: Application, prisma: PrismaClient) {
         }
     }));
 
+    // Admin Page
+    app.get('/admin', requiresAdmin, async function (req: Request, res: Response) {
+        const allUsers = await prisma.user.findMany({
+            include: { posts: true },
+          });
+
+        res.render('admin', {allUsers})
+    });
+
+    // User Dashboard Page
+    app.get('/dashboard', requiresLoggedIn, async function (req: Request, res: Response) {
+        res.render('dashboard', {currentUser: req.session.user})
+    });
+
     // Login Page
     app.get('/login', function (req: Request, res: Response) {
+
+        // Check if the user is already logged in.
+        if (req.session && req.session.user) {
+            return res.redirect('/admin');
+        }
+
         res.render('auth/login');
+
     });
 
     // Login Logic
@@ -100,6 +135,12 @@ module.exports = function (app: Application, prisma: PrismaClient) {
 
     // Registration page
     app.get('/register', function (req: Request, res: Response) {
+
+        // Check if the user is already logged in.
+        if (req.session && req.session.user) {
+            return res.redirect('/admin');
+        }
+
         res.render('auth/register');
     });
 
@@ -140,7 +181,7 @@ module.exports = function (app: Application, prisma: PrismaClient) {
         // Generate a random salt and hash the password
         const salt = crypto.randomBytes(16).toString('hex');
         crypto.pbkdf2(password, salt + process.env.PASSWORD_PEPPER, 100000, 64, 'sha512', async function (err: string, derivedKey: Buffer) {
-            if(err){
+            if (err) {
                 res.render('auth/register', {
                     error: "An error occured"
                 });
@@ -201,8 +242,8 @@ module.exports = function (app: Application, prisma: PrismaClient) {
             port: process.env.SMTP_PORT,
             secure: process.env.SMTP_SECURE == 'true' ? true : false, // true for 465, false for other ports
             auth: {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PASSWORD, 
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASSWORD,
             },
         });
         const mailOptions = {
@@ -263,7 +304,7 @@ module.exports = function (app: Application, prisma: PrismaClient) {
 
         // Generate a new password hash for the user and store it in the database
         crypto.pbkdf2(password, user.salt + process.env.PASSWORD_PEPPER, 100000, 64, 'sha512', async function (err: string, derivedKey: Buffer) {
-            if(err){
+            if (err) {
                 res.render('auth/reset', {
                     error: "An error occured"
                 });

@@ -1,6 +1,12 @@
-<h1 class="text-5xl font-bold w-screen text-center mt-28 text-gray-400">welcome to Vex</h1>
+<h1 class="text-5xl font-bold w-screen text-center mt-28 text-gray-400">Dashboard</h1>
 
 <div class="w-screen text-center text-2xl mt-10">
+
+  These are your users: <br />
+  {{#each allUsers}}
+    - {{this.name}}<br />
+  {{/each}}
+
 
   {{#if auth}}
     <div class="mt-10">
@@ -11,11 +17,6 @@
           <button type="submit" class="bg-gray-600 text-white font-bold py-2 px-4 mt-5 rounded hover:bg-gray-500">Log
             out</button>
         </form>
-        
-        {{#if isAdmin}}
-          <a href="/admin" class="bg-gray-600 text-white font-bold py-2 px-4 mt-5 rounded hover:bg-gray-500">Admin</a>
-        {{/if}}
-
       {{else}}
         You are not currently logged in |
         <a href="/login">Login</a>
