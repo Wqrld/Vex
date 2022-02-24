@@ -3,7 +3,24 @@
 <div class="w-screen text-center text-2xl mt-10">
 
   These are your users: <br />
-    {{#each allUsers}}
-      - {{this.name}}<br />
-    {{/each}}
+  {{#each allUsers}}
+    - {{this.name}}<br />
+  {{/each}}
+
+
+  {{#if auth}}
+    <div class="mt-10">
+      {{#if currentUser }}
+
+        Currently logged in as {{ currentUser.name }}
+        <form action="/logout" method="POST">
+          <button type="submit" class="bg-gray-600 text-white font-bold py-2 px-4 mt-5 rounded hover:bg-gray-500">Log
+            out</button>
+        </form>
+      {{else}}
+        You are not currently logged in |
+        <a href="/login">Login</a>
+      {{/if}}
+    </div>
+  {{/if}}
 </div>
